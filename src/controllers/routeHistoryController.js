@@ -97,7 +97,7 @@ const endRoute = async (req, res) => {
         },
         {
           ticketPrice: price,
-          status: "Completed",
+          status: "complete",
         },
         { new: true }
       ).then((result) => {
