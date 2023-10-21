@@ -12,7 +12,7 @@ const createRouteHistory = async (req, res) => {
       startLocation: req.body.startLocation,
       endLocation: req.body.endLocation,
       ticketPrice: req.body.ticketPrice,
-      status: "Ongoing",
+      status: "Pending",
     });
     const result = await routeHistory.save();
     return res.status(201).json(result);
@@ -24,6 +24,25 @@ const createRouteHistory = async (req, res) => {
 };
 
 // Retrieve all route history entries
+
+const updateRouteStatus = async (req, res) => {
+  try {
+    const route = await RouteHistory.findOneAndUpdate(
+      {
+        passengerID: req.params.passengerID,
+      },
+      {
+        status: req.body.status,
+      },
+      { new: true }
+    );
+    return res.status(200).json(route);
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: "Could not update route history entry" });
+  }
+};
 const getRouteHistory = async (req, res) => {
   try {
     const routeHistories = await RouteHistory.find();
@@ -47,5 +66,9 @@ const getRouteByUser = async (req, res) => {
       .json({ error: "Could not retrieve route history entries" });
   }
 };
-module.exports = { createRouteHistory, getRouteHistory, getRouteByUser };
-//
+module.exports = {
+  createRouteHistory,
+  getRouteHistory,
+  getRouteByUser,
+  updateRouteStatus,
+};
