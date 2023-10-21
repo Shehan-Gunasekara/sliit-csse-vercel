@@ -28,6 +28,11 @@ const routeHistorySchema = new Schema({
     required: false,
     default: "N/A",
   },
+  status: {
+    type: String,
+    required: true,
+    default: "N/A",
+  },
 });
 
 module.exports = mongoose.model("routeHistory", routeHistorySchema);
