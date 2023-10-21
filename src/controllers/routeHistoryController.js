@@ -12,7 +12,7 @@ const createRouteHistory = async (req, res) => {
       startLocation: req.body.startLocation,
       endLocation: req.body.endLocation,
       ticketPrice: req.body.ticketPrice,
-      status: "Pending",
+      status: "pending",
     });
     const result = await routeHistory.save();
     return res.status(201).json(result);
