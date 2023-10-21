@@ -17,6 +17,6 @@ router.get("/", getRouteHistory);
 //Get user by id
 router.get("/:passengerID", getRouteByUser);
 
-router.patch("/:passengerID", updateRouteStatus);
+router.patch("/updateStatus/:passengerID", updateRouteStatus);
 
 module.exports = router;
