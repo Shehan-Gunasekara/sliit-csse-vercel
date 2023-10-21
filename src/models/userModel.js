@@ -39,6 +39,14 @@ const userSchema = new Schema({
     default: 100.0,
     required: true,
   },
+  isSubscribed: {
+    type: Boolean,
+    default: false,
+  },
+  subscriptionPlan: {
+    type: String,
+    default: "N/A",
+  },
 });
 
 module.exports = mongoose.model("users", userSchema);

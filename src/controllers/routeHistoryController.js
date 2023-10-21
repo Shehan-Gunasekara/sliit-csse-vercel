@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const RouteHistory = require("../models/routeHistory");
-
+const RouteList = require("../models/routeList");
 const createRouteHistory = async (req, res) => {
   try {
     const routeHistory = new RouteHistory({
@@ -66,9 +66,59 @@ const getRouteByUser = async (req, res) => {
       .json({ error: "Could not retrieve route history entries" });
   }
 };
+const endRoute = async (req, res) => {
+  try {
+    const routeHistory = await RouteHistory.findOne({
+      passengerID: req.params.passengerID,
+      status: "ongoing",
+    });
+    console.log(routeHistory);
+    if (routeHistory) {
+      const city1 = routeHistory.startLocation;
+      const city2 = routeHistory.endLocation;
+      console.log(city1);
+      // Use consistent case for the haltName in your queries
+      const startPrice = await RouteList.findOne({
+        haltName: city1,
+      });
+      const endPrice = await RouteList.findOne({
+        haltName: city2,
+      });
+
+      console.log(startPrice);
+      console.log(endPrice);
+
+      const price = parseInt(endPrice.amount) - parseInt(startPrice.amount);
+      console.log(price);
+
+      await RouteHistory.findOneAndUpdate(
+        {
+          passengerID: req.params.passengerID,
+        },
+        {
+          ticketPrice: price,
+          status: "Completed",
+        },
+        { new: true }
+      ).then((result) => {
+        console.log(result);
+        return res.status(200).json({ ticketPrice: price });
+      });
+
+      // const result = await routeHistory.save();
+      // return res.status(200).json(result);
+    }
+  } catch (error) {
+    console.log(error);
+    // Handle the error and send an appropriate response to the client
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
+
 module.exports = {
   createRouteHistory,
   getRouteHistory,
   getRouteByUser,
   updateRouteStatus,
+  endRoute,
 };

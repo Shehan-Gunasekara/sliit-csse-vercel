@@ -325,6 +325,30 @@ const updateUserById = async (req, res) => {
   }
 };
 
+const updateSubscription = async (req, res) => {
+  try {
+    // Assuming you are using a mongoose model for User
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update the subscriptionPlan and isSubscribed properties from the request body
+    user.subscriptionPlan = req.body.subscription; // Fixed the typo in "subscription"
+    user.isSubscribed = req.body.isSubscribed;
+
+    // Save the updated user to the database
+    await user.save();
+
+    // Respond with a success message or the updated user
+    res.status(200).json({ message: "Subscription updated", user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 //Delete user by id
 const deleteUserById = async (req, res) => {
   try {
@@ -341,6 +365,25 @@ const deleteUserById = async (req, res) => {
   }
 };
 
+//Update user role by id
+const updateUserRoleById = async (userId, newRole) => {
+  console.log("updateUserRoleById", userId, newRole);
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return { error: "User not found" };
+    }
+
+    user.role = newRole;
+    await user.save();
+
+    return { message: "User role updated successfully" };
+  } catch (error) {
+    return { error: "Error updating user role" };
+  }
+};
+
 module.exports = {
   loginUser,
   signupUser,
@@ -350,4 +393,6 @@ module.exports = {
   getUserByRole,
   updateUserById,
   deleteUserById,
+  updateUserRoleById,
+  updateSubscription,
 };

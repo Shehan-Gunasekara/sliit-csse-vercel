@@ -6,6 +6,7 @@ const {
   getRouteHistory,
   getRouteByUser,
   updateRouteStatus,
+  endRoute,
 } = require("../controllers/routeHistoryController");
 
 // Login user
@@ -18,5 +19,7 @@ router.get("/", getRouteHistory);
 router.get("/:passengerID", getRouteByUser);
 
 router.patch("/updateStatus/:passengerID", updateRouteStatus);
+
+router.get("/endRoute/:passengerID", endRoute);
 
 module.exports = router;
